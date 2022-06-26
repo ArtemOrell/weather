@@ -1,0 +1,8 @@
+#!/usr/bin/env python3.10
+from network import get_gps_coordinates, get_weather
+from weather_formatter import format_weather
+
+
+def main():
+    coordinates = get_gps_coordinates()
+    weather = get_weather(coordinates)
