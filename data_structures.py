@@ -1,9 +1,9 @@
 """ This module contains data structures that helps to define our data more specifically"""
 
-import datetime
+from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
-from typing import TypeAlias
+from typing import TypeAlias, TypedDict
 
 Celsius: TypeAlias = int
 
@@ -28,6 +28,9 @@ class WeatherType(str, Enum):
 class Weather:
     temperature: Celsius
     weather_type: WeatherType
-    sunrise: datetime.datetime
-    sunset: datetime.datetime
+    sunrise: datetime
+    sunset: datetime
     city: str
+
+
+

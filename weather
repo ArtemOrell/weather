@@ -6,3 +6,7 @@ from weather_formatter import format_weather
 def main():
     coordinates = get_gps_coordinates()
     weather = get_weather(coordinates)
+
+
+if __name__ == '__main__':
+    main()

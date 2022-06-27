@@ -1,7 +1,7 @@
 """ Module contains custom exceptions that helps handle errors. """
 
 
-class CanNotGetLocalIp(Exception):
+class CanNotHandleResponse(Exception):
     pass
 
 
