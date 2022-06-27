@@ -1,4 +1,4 @@
-""" This module allows you to interact with remote services to obtain local computer's ip adderss, gps coordinates,
+""" This module allows you to interact with remote services to obtain local computer's ip address, gps coordinates,
 and weather relative to corresponding coordinates"""
 
 import requests
