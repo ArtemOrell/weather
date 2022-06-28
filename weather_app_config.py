@@ -6,4 +6,12 @@ API_WEATHER_KEY = os.getenv('API_WEATHER_KEY')
 
 URL = 'http://api.ipstack.com/check?access_key={API_IPSTACK_KEY}'
 
-USE_ROUNDED_COORDS = True
+USE_ROUNDED_COORDS = False
+
+OPENWEATHER_URL = (
+"https://api.openweathermap.org/data/2.5/weather?"
+"lat={latitude}&lon={longitude}&"
+"appid=" + API_WEATHER_KEY + "&lang=ru&"
+"units=metric"
+)
+

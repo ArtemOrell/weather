@@ -10,8 +10,9 @@ Celsius: TypeAlias = int
 
 @dataclass(slots=True, frozen=True)
 class Coordinates:
-    longitude: float
     latitude: float
+    longitude: float
+
 
 
 class WeatherType(str, Enum):

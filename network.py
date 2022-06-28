@@ -1,11 +1,11 @@
-""" This module allows you to interact with remote services to obtain local computer's ip address, gps coordinates,
+""" This module allows you to interact with remote services to obtain local computer's gps coordinates,
 and weather relative to corresponding coordinates"""
 
 import requests
-from config import URL, API_IPSTACK_KEY, API_WEATHER_KEY
-from custom_exceptions import CanNotHandleResponse
-from data_structures import Coordinates
-from misc import parse_coordinates
+from weather_app_config import URL, API_IPSTACK_KEY, OPENWEATHER_URL
+from custom_exceptions import IpstackApiServiceError, OpenWeatherApiServiceError
+from data_structures import Coordinates, Weather
+from data_parsing import parse_coordinates, parse_openweather_response
 
 
 def get_gps_coordinates() -> Coordinates:
@@ -16,25 +16,35 @@ def get_gps_coordinates() -> Coordinates:
 
 
 def _get_ipstack_coordinates() -> Coordinates:
+    """ Handle response from 'http://api.ipstack.com/' """
     ipstack_output = _get_ipstack_output()
     coordinates = parse_coordinates(ipstack_output)
     return coordinates
 
 
 def _get_ipstack_output() -> bytes:
+    """ Get response form the 'http://api.ipstack.com/' """
     url = URL.format(API_IPSTACK_KEY=API_IPSTACK_KEY)
     try:
         coordinates = requests.get(url=url).content
     except requests.exceptions.RequestException:
-        raise CanNotHandleResponse
+        raise IpstackApiServiceError
     return coordinates
 
 
-def get_weather(coordinates: Coordinates):
+def get_weather(coordinates: Coordinates) -> Weather:
     """ Sends request to https://openweathermap.org/
     API and returns weather relative to corresponding coordinates
     """
-    pass
+    open_weather_response = _get_openweather_response(coordinates.latitude, coordinates.longitude)
+    weather = parse_openweather_response(open_weather_response)
+    return weather
 
 
-print(get_gps_coordinates())
+def _get_openweather_response(latitude: float, longitude: float) -> bytes:
+    url = OPENWEATHER_URL.format(latitude=latitude, longitude=longitude)
+    try:
+        response = requests.get(url).content
+    except requests.exceptions.RequestException:
+        raise OpenWeatherApiServiceError
+    return response
