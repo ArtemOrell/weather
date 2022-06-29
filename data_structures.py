@@ -1,9 +1,9 @@
-""" This module contains data structures that helps to define our data more specifically"""
+""" This module contains data structures that help us to define our data more specifically"""
 
 from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
-from typing import TypeAlias, TypedDict
+from typing import TypeAlias
 
 Celsius: TypeAlias = int
 
@@ -12,7 +12,6 @@ Celsius: TypeAlias = int
 class Coordinates:
     latitude: float
     longitude: float
-
 
 
 class WeatherType(str, Enum):
@@ -34,4 +33,12 @@ class Weather:
     city: str
 
 
-
+weather_type = {
+    1: WeatherType.THUNDERSTORM,
+    3: WeatherType.DRIZZLE,
+    5: WeatherType.RAIN,
+    6: WeatherType.SNOW,
+    7: WeatherType.FOG,
+    800: WeatherType.CLEAR,
+    80: WeatherType.CLOUDS
+}

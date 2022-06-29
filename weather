@@ -1,14 +1,30 @@
 #!/usr/bin/env python3.10
-""" Main module that starts utility 'weather' """
+""" Main module that starts 'weather' """
+
+from custom_exceptions import IpstackApiServiceError, OpenWeatherApiServiceError
 from network import get_gps_coordinates, get_weather
-from weather_formatter import format_weather
+from weather_formatter import openweather_api_formatter
 
 
 def main():
-    coordinates = get_gps_coordinates()
-    print(coordinates)
-    weather = get_weather(coordinates)
+    coordinates, weather = None, None
+    try:
+        coordinates = get_gps_coordinates()
+    except IpstackApiServiceError:
+        print("Something went wrong with ipstack.com")
+        exit(1)
+    try:
+        weather = get_weather(coordinates)
+    except OpenWeatherApiServiceError:
+        print("Something went wrong openweather.org")
+        exit(1)
+    print(openweather_api_formatter(weather))
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('Cancelled!!!')
+        exit(1)
+

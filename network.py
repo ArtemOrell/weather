@@ -42,6 +42,8 @@ def get_weather(coordinates: Coordinates) -> Weather:
 
 
 def _get_openweather_response(latitude: float, longitude: float) -> bytes:
+    """ Get response form OpenWeather API """
+
     url = OPENWEATHER_URL.format(latitude=latitude, longitude=longitude)
     try:
         response = requests.get(url).content

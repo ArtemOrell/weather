@@ -1,8 +1,13 @@
-""" This module provides functions that parse gps coordinates from ipstack.com
-and parse response from openweathermap.org"""
+""" This module provides functions that parse gps coordinates from ipstack.com API
+and parse the response from openweathermap.org API """
 
-from custom_exceptions import IpstackApiServiceError, CanNotGetCoordinates, OpenWeatherApiServiceError
-from data_structures import Coordinates, Weather
+
+from datetime import datetime
+from typing import Literal
+
+from custom_exceptions import IpstackApiServiceError, CanNotGetCoordinates, OpenWeatherApiServiceError, \
+    CanNotGetOpenWeatherData
+from data_structures import Coordinates, Weather, weather_type, Celsius, WeatherType
 from weather_app_config import USE_ROUNDED_COORDS
 import json
 
@@ -52,17 +57,40 @@ def parse_openweather_response(open_weather_response: bytes) -> Weather:
     )
 
 
-def _parse_temperature():
-    pass
+def _parse_temperature(open_weather_dict: dict[str, str | dict | list]) -> Celsius:
+    """ Ger temperature """
+
+    try:
+        return round(open_weather_dict['main']['temp'])
+    except KeyError:
+        raise CanNotGetOpenWeatherData
 
 
-def _parse_weather_type():
-    pass
+def _parse_weather_type(open_weather_dict: dict[str, slice | dict | list]) -> WeatherType:
+    """ Get weather type"""
+
+    try:
+        weather_type_id = open_weather_dict['weather'][0]['id']
+    except (KeyError, IndexError, TypeError):
+        raise CanNotGetOpenWeatherData
+    try:
+        return weather_type[weather_type_id]
+    except KeyError:
+        raise CanNotGetOpenWeatherData
 
 
-def _parse_sun_time():
-    pass
+def _parse_sun_time(open_weather_dict: dict, time: Literal['sunrise'] | Literal['sunset']) -> datetime:
+    """ Get sunrise and sunset time """
+    try:
+        return datetime.fromtimestamp(open_weather_dict['sys'][time])
+    except KeyError:
+        raise CanNotGetOpenWeatherData
 
 
-def _parse_city():
-    pass
+def _parse_city(open_weather_dict: dict) -> str:
+    """ Get city """
+
+    try:
+        return open_weather_dict['name']
+    except KeyError:
+        raise CanNotGetOpenWeatherData
