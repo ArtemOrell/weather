@@ -1,7 +1,7 @@
 """ This module provides functions that parse gps coordinates from ipstack.com API
 and parse the response from openweathermap.org API """
 
-
+import json
 from datetime import datetime
 from typing import Literal
 
@@ -9,7 +9,6 @@ from custom_exceptions import IpstackApiServiceError, CanNotGetCoordinates, Open
     CanNotGetOpenWeatherData
 from data_structures import Coordinates, Weather, weather_type, Celsius, WeatherType
 from weather_app_config import USE_ROUNDED_COORDS
-import json
 
 
 def parse_coordinates(data: bytes) -> Coordinates:
@@ -53,7 +52,8 @@ def parse_openweather_response(open_weather_response: bytes) -> Weather:
         weather_type=_parse_weather_type(openweather_dict),
         sunrise=_parse_sun_time(openweather_dict, "sunrise"),
         sunset=_parse_sun_time(openweather_dict, "sunset"),
-        city=_parse_city(openweather_dict)
+        city=_parse_city(openweather_dict),
+        description=_parse_weather_description(openweather_dict, 'description')
     )
 
 
@@ -70,7 +70,8 @@ def _parse_weather_type(open_weather_dict: dict[str, slice | dict | list]) -> We
     """ Get weather type"""
 
     try:
-        weather_type_id = open_weather_dict['weather'][0]['id']
+        _type_id = open_weather_dict['weather'][0]['id']
+        weather_type_id = _match_type_id(_type_id)
     except (KeyError, IndexError, TypeError):
         raise CanNotGetOpenWeatherData
     try:
@@ -94,3 +95,25 @@ def _parse_city(open_weather_dict: dict) -> str:
         return open_weather_dict['name']
     except KeyError:
         raise CanNotGetOpenWeatherData
+
+
+def _parse_weather_description(open_weather_dict: dict[str, slice | dict | list], description: Literal['description']):
+    """ Get weather description """
+    try:
+        weather_description = open_weather_dict['weather'][0][description]
+        return weather_description
+    except KeyError:
+        raise CanNotGetOpenWeatherData
+
+
+def _match_type_id(type_id: int) -> int:
+    match type_id:
+        case type_id if 200 <= type_id < 233:
+            type_id = 2
+        case type_id if 300 <= type_id < 321:
+            type_id = 3
+        case type_id if 500 <= type_id < 532:
+            type_id = 5
+        case type_id if 600 <= type_id < 623:
+            type_id = 6
+    return type_id

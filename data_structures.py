@@ -22,6 +22,11 @@ class WeatherType(str, Enum):
     CLEAR = "Ясно"
     FOG = "Туман"
     CLOUDS = "Облачно"
+    DUST = "Пыльная буря"
+    SAND = "Песчаная буря"
+    ASH = "Пепел"
+    SQUALL = "Порывы"
+    TORNADO = "Ураган"
 
 
 @dataclass(slots=True, frozen=True)
@@ -31,14 +36,28 @@ class Weather:
     sunrise: datetime
     sunset: datetime
     city: str
+    description: str
 
 
 weather_type = {
-    1: WeatherType.THUNDERSTORM,
+    2: WeatherType.THUNDERSTORM,
     3: WeatherType.DRIZZLE,
     5: WeatherType.RAIN,
     6: WeatherType.SNOW,
-    7: WeatherType.FOG,
+    701: WeatherType.FOG,
+    711: WeatherType.FOG,
+    721: WeatherType.FOG,
+    731: WeatherType.DUST,
+    741: WeatherType.FOG,
+    751: WeatherType.SAND,
+    761: WeatherType.DUST,
+    762: WeatherType.ASH,
+    771: WeatherType.SQUALL,
+    781: WeatherType.TORNADO,
     800: WeatherType.CLEAR,
+    801: WeatherType.CLOUDS,
+    802: WeatherType.CLOUDS,
+    803: WeatherType.CLOUDS,
+    804: WeatherType.CLOUDS,
     80: WeatherType.CLOUDS
 }
