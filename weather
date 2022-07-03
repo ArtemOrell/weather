@@ -32,5 +32,3 @@ if __name__ == '__main__':
         print('Cancelled!!!')
         exit(1)
 
-# TODO: now on  45 page. Need to reach end of the book!
-# TODO: add logger add mypy add flake8
