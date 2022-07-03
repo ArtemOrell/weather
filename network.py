@@ -1,5 +1,5 @@
-""" This module allows you to interact with remote services to obtain local computer's gps coordinates,
-and weather relative to corresponding coordinates"""
+""" This module allows you to interact with remote services to obtain local computer's IP address,
+and weather relative to corresponding IP """
 
 import requests
 from weather_app_config import URL, API_IPSTACK_KEY, OPENWEATHER_URL

@@ -1,4 +1,4 @@
-""" This module provides functions that parse gps coordinates from ipstack.com API
+""" This module provides functions that parse IP coordinates from ipstack.com API
 and parse the response from openweathermap.org API """
 
 import json
