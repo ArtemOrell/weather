@@ -19,3 +19,8 @@ class OpenWeatherApiServiceError(Exception):
 class CanNotGetOpenWeatherData(Exception):
     """ Raise in case if we can not get some data from OpenWeather API response"""
     pass
+
+
+class CanNotWriteData(Exception):
+    """ Raise in case if we cannot write data to json file """
+    pass

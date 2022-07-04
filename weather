@@ -1,10 +1,11 @@
 #!/usr/bin/env python3.10
 """ Main module that starts 'weather' """
 from pathlib import Path
-from custom_exceptions import IpstackApiServiceError, OpenWeatherApiServiceError
+
+from custom_exceptions import IpstackApiServiceError, OpenWeatherApiServiceError, CanNotWriteData
+from history import JsonFileWeatherStorage, save_weather
 from network import get_gps_coordinates, get_weather
 from weather_formatter import openweather_api_formatter
-from history import PlainFileWeatherStorage, save_weather
 
 
 def main():
@@ -19,9 +20,12 @@ def main():
     except OpenWeatherApiServiceError:
         print("Something went wrong openweather.org")
         exit(1)
-    save_weather(weather,
-                 PlainFileWeatherStorage(Path.cwd() / 'history.txt')
-                 )
+    try:
+        save_weather(weather,
+                     JsonFileWeatherStorage(Path.cwd() / 'history.json')
+                     )
+    except CanNotWriteData:
+        print("Can not save history")
     print(openweather_api_formatter(weather))
 
 
@@ -31,5 +35,3 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Cancelled!!!')
         exit(1)
-
-
