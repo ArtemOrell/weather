@@ -8,23 +8,23 @@ from typing import Literal
 from custom_exceptions import IpstackApiServiceError, CanNotGetCoordinates, OpenWeatherApiServiceError, \
     CanNotGetOpenWeatherData
 from data_structures import Coordinates, Weather, weather_type, Celsius, WeatherType
-from weather_app_config import USE_ROUNDED_COORDS
+from weather_app_config import USE_ROUNDED_COORD
 
 
 def parse_coordinates(data: bytes) -> Coordinates:
     """ Get coordinates from json response"""
     try:
-        data = json.loads(data)
+        data_dict = json.loads(data)
     except json.JSONDecodeError:
         raise IpstackApiServiceError
-    coordinates = _parse_coord(data)
+    coordinates = _parse_coord(data_dict)
     return _round_coordinates(coordinates)
 
 
 def _parse_coord(data: dict) -> Coordinates:
     """ Get latitude and longitude """
     try:
-        latitude, longitude = data.get('latitude'), data.get('longitude')
+        latitude, longitude = str(data.get('latitude')), str(data.get('longitude'))
     except KeyError:
         raise CanNotGetCoordinates
     return _parse_float_coordinates(latitude, longitude)
@@ -36,8 +36,8 @@ def _parse_float_coordinates(latitude: str, longitude: str) -> Coordinates:
 
 
 def _round_coordinates(coordinates: Coordinates):
-    """ Rounded coordinates to one digit after the dot if config.USE_ROUNDED_COORDS = True"""
-    if not USE_ROUNDED_COORDS:
+    """ Rounded coordinates to one digit after the dot if config.USE_ROUNDED_COORD = True"""
+    if not USE_ROUNDED_COORD:
         return coordinates
     return Coordinates(*map(lambda c: round(c, 1), [coordinates.latitude, coordinates.longitude]))
 
@@ -57,7 +57,7 @@ def parse_openweather_response(open_weather_response: bytes) -> Weather:
     )
 
 
-def _parse_temperature(open_weather_dict: dict[str, str | dict | list]) -> Celsius:
+def _parse_temperature(open_weather_dict: dict) -> Celsius:
     """ Ger temperature """
 
     try:
@@ -66,7 +66,7 @@ def _parse_temperature(open_weather_dict: dict[str, str | dict | list]) -> Celsi
         raise CanNotGetOpenWeatherData
 
 
-def _parse_weather_type(open_weather_dict: dict[str, slice | dict | list]) -> WeatherType:
+def _parse_weather_type(open_weather_dict: dict) -> WeatherType:
     """ Get weather type"""
 
     try:
@@ -97,7 +97,7 @@ def _parse_city(open_weather_dict: dict) -> str:
         raise CanNotGetOpenWeatherData
 
 
-def _parse_weather_description(open_weather_dict: dict[str, slice | dict | list], description: Literal['description']):
+def _parse_weather_description(open_weather_dict: dict, description: Literal['description']):
     """ Get weather description """
     try:
         weather_description = open_weather_dict['weather'][0][description]
