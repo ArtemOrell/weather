@@ -2,7 +2,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Protocol, TypedDict
+from typing import Protocol, TypedDict, Any
 
 from custom_exceptions import CanNotWriteData
 from data_structures import Weather
@@ -26,7 +26,7 @@ class JsonFileWeatherStorage:
         self._json_file = jsonfile
         self._init_storage()
 
-    def save(self, weather: Weather):
+    def save(self, weather: Weather) -> None:
         history_list = self._read_history()
         history_list.append(
             {
@@ -35,14 +35,14 @@ class JsonFileWeatherStorage:
             })
         self._write_history(history_list)
 
-    def _init_storage(self):
+    def _init_storage(self) -> None:
         if not self._json_file.exists():
             try:
                 self._json_file.write_text('[]')
             except IOError:
                 raise CanNotWriteData
 
-    def _read_history(self) -> list[HistoryRecord]:
+    def _read_history(self) -> Any:
         with open(self._json_file, mode='r', encoding='UTF-8') as file:
             return json.load(file)
 

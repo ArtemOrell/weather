@@ -1,0 +1,4 @@
+[flake8]
+exclude = .mypy_cache, venv, __pycache
+max-line-length = 79
+select = F901

@@ -3,7 +3,7 @@ and parse the response from openweathermap.org API """
 
 import json
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Any
 
 from custom_exceptions import IpstackApiServiceError, CanNotGetCoordinates, OpenWeatherApiServiceError, \
     CanNotGetOpenWeatherData
@@ -21,7 +21,7 @@ def parse_coordinates(data: bytes) -> Coordinates:
     return _round_coordinates(coordinates)
 
 
-def _parse_coord(data: dict) -> Coordinates:
+def _parse_coord(data: dict[str, slice]) -> Coordinates:
     """ Get latitude and longitude """
     try:
         latitude, longitude = str(data.get('latitude')), str(data.get('longitude'))
@@ -35,7 +35,7 @@ def _parse_float_coordinates(latitude: str, longitude: str) -> Coordinates:
     return Coordinates(*map(lambda c: float(c), [latitude, longitude]))
 
 
-def _round_coordinates(coordinates: Coordinates):
+def _round_coordinates(coordinates: Coordinates) -> Coordinates:
     """ Rounded coordinates to one digit after the dot if config.USE_ROUNDED_COORD = True"""
     if not USE_ROUNDED_COORD:
         return coordinates
@@ -57,7 +57,7 @@ def parse_openweather_response(open_weather_response: bytes) -> Weather:
     )
 
 
-def _parse_temperature(open_weather_dict: dict) -> Celsius:
+def _parse_temperature(open_weather_dict: dict[str, Any]) -> Celsius:
     """ Ger temperature """
 
     try:
@@ -66,7 +66,7 @@ def _parse_temperature(open_weather_dict: dict) -> Celsius:
         raise CanNotGetOpenWeatherData
 
 
-def _parse_weather_type(open_weather_dict: dict) -> WeatherType:
+def _parse_weather_type(open_weather_dict: dict[str, Any]) -> WeatherType:
     """ Get weather type"""
 
     try:
@@ -80,7 +80,7 @@ def _parse_weather_type(open_weather_dict: dict) -> WeatherType:
         raise CanNotGetOpenWeatherData
 
 
-def _parse_sun_time(open_weather_dict: dict, time: Literal['sunrise'] | Literal['sunset']) -> datetime:
+def _parse_sun_time(open_weather_dict: dict[str, Any], time: Literal['sunrise'] | Literal['sunset']) -> datetime:
     """ Get sunrise and sunset time """
     try:
         return datetime.fromtimestamp(open_weather_dict['sys'][time])
@@ -88,7 +88,7 @@ def _parse_sun_time(open_weather_dict: dict, time: Literal['sunrise'] | Literal[
         raise CanNotGetOpenWeatherData
 
 
-def _parse_city(open_weather_dict: dict) -> str:
+def _parse_city(open_weather_dict: dict[str, Any]) -> Any:
     """ Get city """
 
     try:
@@ -97,7 +97,7 @@ def _parse_city(open_weather_dict: dict) -> str:
         raise CanNotGetOpenWeatherData
 
 
-def _parse_weather_description(open_weather_dict: dict, description: Literal['description']):
+def _parse_weather_description(open_weather_dict: dict[str, Any], description: Literal['description']) -> str | Any:
     """ Get weather description """
     try:
         weather_description = open_weather_dict['weather'][0][description]

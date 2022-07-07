@@ -8,7 +8,7 @@ from network import get_gps_coordinates, get_weather
 from weather_formatter import openweather_api_formatter
 
 
-def main():
+def main() -> None:
     coordinates, weather = None, None
     try:
         coordinates = get_gps_coordinates()
