@@ -2,6 +2,7 @@
 and parse the response from openweathermap.org API """
 
 import json
+import logging
 from datetime import datetime
 from typing import Literal, Any
 
@@ -9,6 +10,10 @@ from custom_exceptions import IpstackApiServiceError, CanNotGetCoordinates, Open
     CanNotGetOpenWeatherData
 from data_structures import Coordinates, Weather, weather_type, Celsius, WeatherType
 from weather_app_config import USE_ROUNDED_COORD
+
+logger = logging.getLogger(__name__)
+
+logger.debug('Hi from data_parsing.py')
 
 
 def parse_coordinates(data: bytes) -> Coordinates:

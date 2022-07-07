@@ -1,11 +1,23 @@
 #!/usr/bin/env python3.10
 """ Main module that starts 'weather' """
+import logging.config
 from pathlib import Path
+
+import yaml
+
+# read logger config from logger_config.yaml
+with open('logger_config.yaml', 'r') as file:
+    logger_config = yaml.safe_load(file.read())
+    logging.config.dictConfig(logger_config)
 
 from custom_exceptions import IpstackApiServiceError, OpenWeatherApiServiceError, CanNotWriteData
 from history import JsonFileWeatherStorage, save_weather
 from network import get_gps_coordinates, get_weather
 from weather_formatter import openweather_api_formatter
+
+logger = logging.getLogger(__file__.split('/')[-1])
+
+logger.debug('Hi from history !!!!')
 
 
 def main() -> None:

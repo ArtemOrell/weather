@@ -1,0 +1,31 @@
+version: 1
+
+formatters:
+  console_formatter:
+    (): logger_settings.CustomFormatter
+    format: '{asctime}-{name}  -level:{levelname}-  -message:{message}-  -function:{funcName}-  -line:{lineno}'
+    datefmt: "%Y-%m-%d %H:%M:%S"
+    style: "{"
+handlers:
+  console_handler:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: console_formatter
+loggers:
+  weather:
+    level: DEBUG
+    handlers: [console_handler]
+    propagate: False
+  network:
+    level: DEBUG
+    handlers: [ console_handler ]
+    propagate: False
+  data_parsing:
+    level: DEBUG
+    handlers: [ console_handler ]
+    propagate: False
+  history:
+    level: DEBUG
+    handlers: [ console_handler ]
+    propagate: False
+disable_existing_loggers: False

@@ -1,5 +1,7 @@
 """ Module provide functionality to save weather history """
+
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Protocol, TypedDict, Any
@@ -7,6 +9,10 @@ from typing import Protocol, TypedDict, Any
 from custom_exceptions import CanNotWriteData
 from data_structures import Weather
 from weather_formatter import openweather_api_formatter
+
+logger = logging.getLogger(__name__)
+
+logger.debug('Hi from history.py ')
 
 
 class HistoryRecord(TypedDict):

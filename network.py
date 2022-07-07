@@ -1,11 +1,18 @@
 """ This module allows you to interact with remote services to obtain local computer's IP address,
 and weather relative to corresponding IP """
 
+import logging.config
+
 import requests
-from weather_app_config import URL, API_IPSTACK_KEY, OPENWEATHER_URL
+
 from custom_exceptions import IpstackApiServiceError, OpenWeatherApiServiceError
-from data_structures import Coordinates, Weather
 from data_parsing import parse_coordinates, parse_openweather_response
+from data_structures import Coordinates, Weather
+from weather_app_config import URL, API_IPSTACK_KEY, OPENWEATHER_URL
+
+logger = logging.getLogger(__name__)
+
+logger.debug('Hi from network.py')
 
 
 def get_gps_coordinates() -> Coordinates:
