@@ -47,3 +47,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Cancelled!!!')
         exit(1)
+
+# TODO: add logger messages
